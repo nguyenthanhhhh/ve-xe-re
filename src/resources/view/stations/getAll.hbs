@@ -1,0 +1,16 @@
+<div class="mt4">
+    <div class="row">
+        {{#each allStation}}
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <img class="card-img-top" src="{{this.avatar}}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.name}}</h5>
+                    <p class="card-text">Bến xe thuộc {{this.address}} tỉnh {{this.province}}</p>
+                    <a href="/trips/formFindTrip" class="btn btn-primary">Tìm chuyến đi</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>

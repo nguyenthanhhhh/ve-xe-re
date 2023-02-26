@@ -1,0 +1,26 @@
+<form method="POST" action="/stations/{{station.id}}/updatePut?_method=PUT">
+    <h1>Sửa bến xe</h1>
+    <div class="form-group">
+        <label for="name">Nhập tên nhà ga</label>
+        <textarea id="nameStation" class="form-control" name="name">{{station.name}}</textarea>
+
+    </div>
+    <div class="form-group">
+        <label for="address">Nhập địa chỉ</label>
+        <textarea id="addressStation" class="form-control" name="address">{{station.address}}</textarea>
+    </div>
+
+
+    <div class="form-group">
+        <label for="province">Nhập tỉnh</label>
+        <textarea id="provinceStation" class="form-control" name="province">{{station.province}}</textarea>
+    </div>
+
+
+    <div class="form-group">
+        <label for="avatar">Link avatar</label>
+        <textarea id="avatarStation" class="form-control" name="avatar">{{station.avatar}}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+</form>

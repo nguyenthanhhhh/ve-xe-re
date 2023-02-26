@@ -1,0 +1,80 @@
+<table class="table">
+    <h1>Danh sách vé đã mua</h1>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Chuyến đi</th>
+            <th scope="col">Xe</th>
+            <th scope="col" colspan="2">Ghế ngồi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each tickets}}
+        <tr>
+            <th scope="row">{{sum @index 1}}</th>
+            <td>{{this.infTrip.from.name}} đi {{this.infTrip.to.name}}</td>
+            <td>{{this.infVehicle.name}}</td>
+            <td>{{this.seat}}</td>
+            <td>
+                <a href="/users/{{this.id}}/getDetailTicket" class="btn btn-primary" , data-id={{this.id}}>Xem chi
+                    tiết</a>
+                <a href="" id="hello" class="btn btn-danger" data-id="{{this.id}}" data-toggle="modal"
+                    data-target="#delete-modal">Hủy vé</a>
+            </td>
+
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+{{! Confirm delete ticket }}
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn chắc chắn muốn hủy vé này?
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-ticket" class="btn btn-danger">Hủy vé</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{{!-- delete hidden form --}}
+<form name="delete-ticket-form" method="POST" action=""></form>
+
+<script>
+
+    //Thêm hàm này để sử dụng $
+    document.addEventListener("DOMContentLoaded", function () {
+        var ticketId;
+        var btnDeleteTicket = document.getElementById("btn-delete-ticket");
+        var deleteForm = document.forms['delete-ticket-form'];
+
+        $('#delete-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            ticketId = button.data('id');
+        });
+
+
+
+        // Click vào nút xác nhận xóa
+        btnDeleteTicket.onclick = function () {
+            deleteForm.action = '/users/' + ticketId + '/delete-ticket?_method=DELETE';
+            deleteForm.submit();
+        }
+    })
+
+
+</script>

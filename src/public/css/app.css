@@ -1,0 +1,38 @@
+#img-home {
+  width: 100%;
+  height: 100%; }
+
+.find-trip-title {
+  text-align: center; }
+
+.find-trip-wrap {
+  display: flex;
+  margin-top: 16px; }
+  .find-trip-wrap .form-find-trip {
+    width: 60%;
+    margin: auto;
+    display: block; }
+
+.noidi-option,
+.noiden-option {
+  width: 250px;
+  display: block; }
+
+.chooseSeat-option {
+  width: 100px;
+  display: block;
+  margin-bottom: 15px;
+  margin-left: 15px; }
+
+.chooseSeat {
+  align-items: center;
+  display: flex; }
+
+.carouselItem {
+  height: 90vh !important; }
+
+.userNameForm,
+.passwordForm,
+.emailForm {
+  width: 600px;
+  display: block; }

@@ -1,0 +1,31 @@
+<form method="POST" action="/trips/{{trip.id}}/updatePut?_method=PUT">
+    <h1>Sửa chuyến đi</h1>
+    <div class="form-group">
+        <label for="name">Nhập ga đi</label>
+        <textarea id="fromStation" class="form-control" name="fromStation">{{trip.fromStation}}</textarea>
+
+    </div>
+    <div class="form-group">
+        <label for="address">Nhập ga đích</label>
+        <textarea id="toStation" class="form-control" name="toStation">{{trip.toStation}}</textarea>
+    </div>
+
+
+    <div class="form-group">
+        <label for="province">Nhập thời gian xuất phát</label>
+        <textarea id="startTime" class="form-control" name="startTime">{{trip.startTime}}</textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="province">Nhập giá</label>
+        <textarea id="price" class="form-control" name="price">{{trip.price}}</textarea>
+    </div>
+
+
+    <div class="form-group">
+        <label for="avatar">Link avatar</label>
+        <textarea id="avatar" class="form-control" name="avatar">{{trip.avatar}}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+</form>
