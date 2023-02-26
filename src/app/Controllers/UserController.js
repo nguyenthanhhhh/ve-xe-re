@@ -98,6 +98,7 @@ class UserController {
   logout(req, res) {
     // res.clearCookie("token");
     // req.logOut();
+    console.log("CHuan bij logout");
     res.status(200).clearCookie("auth");
     res.redirect("/");
     console.log("Logout");
