@@ -125,6 +125,18 @@ class UserController {
         seat: chooseSeat,
       });
 
+      const newSeat = await seats.findOne({
+        where: {
+          name: chooseSeat,
+          vehicle_id,
+        },
+      });
+
+      newSeat.status = 0;
+
+      console.log(dataToObj(newSeat));
+      await newSeat.save();
+
       res.status(201).send("Mua vé thành công. <a href = />Quay lại </a>");
     } catch (error) {
       res.status(500).send({ message: error.message });
