@@ -1,10 +1,10 @@
 const express = require("express");
+require("dotenv").config();
 const { sequelize } = require("./app/models");
 const path = require("path");
 const { engine } = require("express-handlebars");
 const rootRouter = require("./router");
 const methodOverride = require("method-override");
-const port = 3001;
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const cookieSession = require("cookie-session");
@@ -13,6 +13,7 @@ const Handlebars = require("handlebars");
 const {
   allowInsecurePrototypeAccess,
 } = require("@handlebars/allow-prototype-access");
+const port = process.env.PORT;
 
 const app = express();
 

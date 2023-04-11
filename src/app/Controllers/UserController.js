@@ -71,8 +71,8 @@ class UserController {
         if (auth) {
           const token = jwt.sign(
             { userName: userLog.userName, type: userLog.type },
-            "thanh",
-            { expiresIn: 15 * 60 }
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN }
           );
 
           res.cookie("auth", token);
@@ -98,7 +98,6 @@ class UserController {
   logout(req, res) {
     // res.clearCookie("token");
     // req.logOut();
-    console.log("CHuan bij logout");
     res.status(200).clearCookie("auth");
     res.redirect("/");
     console.log("Logout");
