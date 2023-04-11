@@ -66,13 +66,16 @@ class UserController {
         },
       });
 
+      const timeExpire = process.env.JWT_EXPIRES_IN;
+      console.log("TIME EXPIRED: " + timeExpire);
+
       if (userLog) {
         const auth = bcrypt.compareSync(password, userLog.password);
         if (auth) {
           const token = jwt.sign(
             { userName: userLog.userName, type: userLog.type },
             process.env.JWT_SECRET,
-            { expiresIn: process.env.JWT_EXPIRES_IN }
+            { expiresIn: timeExpire }
           );
 
           res.cookie("auth", token);
