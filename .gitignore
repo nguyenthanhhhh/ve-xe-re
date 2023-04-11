@@ -1,4 +1,4 @@
 $ git config --global core.excludesfile ~/.gitignore_global
-.evn
+.env
 node_modules
 node_modules/*
