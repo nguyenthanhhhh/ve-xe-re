@@ -21,6 +21,14 @@ if (config.use_env_variable) {
       host: process.env.DB_HOST,
       dialect: process.env.DB_DIALECT,
       logging: process.env.LOGGING,
+      // dialectOptions:
+      //   process.env.DD_SSL === "true"?
+      //   {
+      //     ssl: {
+      //       require: true,
+      //       rejectUnauthorized: false
+      //     }
+      //   }
     }
   );
 }
