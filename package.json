@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "watch": "node-sass --watch src/resources/scss/ --output src/public/css/"
+    "watch": "node-sass --watch src/resources/scss/ --output src/public/css/",
+    "build-src": "babel src -d build --copy-files",
+    "build": "node build/server.js"
   },
   "author": "",
   "license": "ISC",
@@ -29,12 +31,16 @@
     "moment": "^2.29.4",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.20",
-    "pg": "8.7.1",
-    "pg-hstore": "2.3.4",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
     "sequelize": "^6.26.0",
     "url-slug": "^3.0.4"
   },
   "devDependencies": {
+    "@babel/core": "^7.21.4",
+    "@babel/node": "^7.20.7",
+    "@babel/preset-env": "^7.21.4",
+    "babel-cli": "^6.26.0",
     "node-sass": "^8.0.0",
     "sequelize-cli": "^6.5.2"
   }

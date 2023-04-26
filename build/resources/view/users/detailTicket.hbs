@@ -1,0 +1,12 @@
+<div class="media mt-4">
+    <img class="mr-3" src={{ticket.infTrip.avatar}}>
+    <div class="media-body">
+        <p>Tài khoản {{ticket.infUser.userName}}</p>
+        <p>Bạn đã đặt vé di chuyển từ {{ticket.infTrip.from.name}}({{ticket.infTrip.from.province}}) đến
+            {{ticket.infTrip.to.name}}({{ticket.infTrip.to.province}}) vào ngày {{ticket.infTrip.startTime}}</p>
+        <p>Giá vé là {{ticket.infTrip.price}}vnđ</p>
+        <p>Chuyến đi được chở bởi {{ticket.infVehicle.name}}, ghế ngồi của bạn là ghế {{ticket.seat}}</p>
+
+        <a href="/users/ticket-store" class="btn btn-secondary">Quay lại</a>
+    </div>
+</div>

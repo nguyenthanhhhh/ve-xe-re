@@ -6,7 +6,7 @@ const Sequelize = require("sequelize");
 const process = require("process");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV;
-const config = require(__dirname + "/../../config/config.json")[env];
+const config = require(__dirname + "/../../config/config.js")[env];
 const db = {};
 
 let sequelize;
@@ -18,17 +18,19 @@ if (config.use_env_variable) {
     process.env.DB_USERNAME,
     process.env.DB_PASSWORD,
     {
+      port: process.env.DB_PORT,
       host: process.env.DB_HOST,
       dialect: process.env.DB_DIALECT,
       logging: process.env.LOGGING,
-      // dialectOptions:
-      //   process.env.DD_SSL === "true"?
-      //   {
-      //     ssl: {
-      //       require: true,
-      //       rejectUnauthorized: false
-      //     }
-      //   }
+      dialectOptions:
+        process.env.DD_SSL === "true"
+          ? {
+              ssl: {
+                require: true,
+                rejectUnauthorized: false,
+              },
+            }
+          : {},
     }
   );
 }

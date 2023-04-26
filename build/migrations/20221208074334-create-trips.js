@@ -1,5 +1,6 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Trips", {
@@ -7,50 +8,50 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       fromStation: {
         type: Sequelize.INTEGER,
         references: {
           model: "Stations",
-          key: "id",
-        },
+          key: "id"
+        }
       },
       toStation: {
         type: Sequelize.INTEGER,
         references: {
           model: "Stations",
-          key: "id",
-        },
+          key: "id"
+        }
       },
       startTime: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       price: {
-        type: Sequelize.FLOAT,
+        type: Sequelize.FLOAT
       },
       avatar: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       slug: {
         type: Sequelize.STRING,
-        unique: true,
+        unique: true
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       deletedAt: {
         allowNull: true,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("Trips");
-  },
+  }
 };

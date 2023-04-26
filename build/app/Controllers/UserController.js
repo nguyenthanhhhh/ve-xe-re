@@ -20,13 +20,11 @@ class UserController {
       await newUser.validate();
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(password, salt);
-      Users.create({ userName, password: hash, email })
-        .then(() => {
-          res.send("Tao tai khoan thanh cong");
-        })
-        .catch((err) => {
-          res.send({ message: err.message });
-        });
+      Users.create({ userName, password: hash, email }).then(() => {
+        res.send("Tao tai khoan thanh cong");
+      }).catch(err => {
+        res.send({ message: err.message });
+      });
     } catch (error) {
       let err = error.message;
       err = err.replace(/Validation error: /g, "");
@@ -53,17 +51,13 @@ class UserController {
   async loginPOST(req, res) {
     const token = req.cookies.auth;
     if (token) {
-      res
-        .status(401)
-        .send(
-          "Bạn đã đăng nhập rồi, không thể đăng nhập. <a href = />Quay lại </a>"
-        );
+      res.status(401).send("Bạn đã đăng nhập rồi, không thể đăng nhập. <a href = />Quay lại </a>");
     } else {
       const { userName, password } = req.body;
       const userLog = await Users.findOne({
         where: {
-          userName,
-        },
+          userName
+        }
       });
 
       const timeExpire = process.env.JWT_EXPIRES_IN;
@@ -72,28 +66,16 @@ class UserController {
       if (userLog) {
         const auth = bcrypt.compareSync(password, userLog.password);
         if (auth) {
-          const token = jwt.sign(
-            { userName: userLog.userName, type: userLog.type },
-            process.env.JWT_SECRET,
-            { expiresIn: timeExpire }
-          );
+          const token = jwt.sign({ userName: userLog.userName, type: userLog.type }, process.env.JWT_SECRET, { expiresIn: timeExpire });
 
           res.cookie("auth", token);
           res.redirect("/");
           console.log("Dang nhap thanh cong");
         } else {
-          res
-            .status(401)
-            .send(
-              "Mật khẩu không chính xác. <a href = /users/loginGet>Quay lại </a>"
-            );
+          res.status(401).send("Mật khẩu không chính xác. <a href = /users/loginGet>Quay lại </a>");
         }
       } else {
-        res
-          .status(401)
-          .send(
-            "Tài khoản không tồn tại. <a href = /users/loginGet>Quay lại </a>"
-          );
+        res.status(401).send("Tài khoản không tồn tại. <a href = /users/loginGet>Quay lại </a>");
       }
     }
   }
@@ -116,22 +98,22 @@ class UserController {
     try {
       const userBuy = await Users.findOne({
         where: {
-          userName: user.userName,
-        },
+          userName: user.userName
+        }
       });
 
       const newTicket = await tickets.create({
         trip_id,
         user_id: userBuy.id,
         vehicle_id,
-        seat: chooseSeat,
+        seat: chooseSeat
       });
 
       const newSeat = await seats.findOne({
         where: {
           name: chooseSeat,
-          vehicle_id,
-        },
+          vehicle_id
+        }
       });
 
       newSeat.status = 0;
@@ -148,94 +130,75 @@ class UserController {
     const { user } = req;
     const userBuy = await Users.findOne({
       where: {
-        userName: user.userName,
-      },
+        userName: user.userName
+      }
     });
 
-    tickets
-      .findAll({
-        where: {
-          user_id: userBuy.id,
-        },
-        include: [
-          {
-            model: Trips,
-            as: "infTrip",
-            include: [
-              {
-                model: Station,
-                as: "to",
-              },
-              {
-                model: Station,
-                as: "from",
-              },
-            ],
-          },
-          {
-            model: vehicle,
-            as: "infVehicle",
-          },
-        ],
-      })
-      .then((tickets) => {
-        res.render("users/ticket-store", { tickets: dataToObj(tickets) });
-      });
+    tickets.findAll({
+      where: {
+        user_id: userBuy.id
+      },
+      include: [{
+        model: Trips,
+        as: "infTrip",
+        include: [{
+          model: Station,
+          as: "to"
+        }, {
+          model: Station,
+          as: "from"
+        }]
+      }, {
+        model: vehicle,
+        as: "infVehicle"
+      }]
+    }).then(tickets => {
+      res.render("users/ticket-store", { tickets: dataToObj(tickets) });
+    });
   }
 
   getDetailTicket(req, res) {
     const { id } = req.params;
-    tickets
-      .findOne({
-        where: {
-          id,
-        },
-        include: [
-          {
-            model: Trips,
-            as: "infTrip",
-            include: [
-              {
-                model: Station,
-                as: "to",
-              },
-              {
-                model: Station,
-                as: "from",
-              },
-            ],
-          },
-          {
-            model: vehicle,
-            as: "infVehicle",
-          },
-          {
-            model: Users,
-            as: "infUser",
-          },
-        ],
-      })
-      .then((ticket) => {
-        let newData = dataToObj(ticket);
-        let time = newData.infTrip.startTime;
-        time = moment(time).format("DD/MM/YYYY [vào lúc] HH [giờ] mm [phút] ");
-        newData.infTrip.startTime = time;
-        res.status(200).render("users/detailTicket", { ticket: newData });
-      });
+    tickets.findOne({
+      where: {
+        id
+      },
+      include: [{
+        model: Trips,
+        as: "infTrip",
+        include: [{
+          model: Station,
+          as: "to"
+        }, {
+          model: Station,
+          as: "from"
+        }]
+      }, {
+        model: vehicle,
+        as: "infVehicle"
+      }, {
+        model: Users,
+        as: "infUser"
+      }]
+    }).then(ticket => {
+      let newData = dataToObj(ticket);
+      let time = newData.infTrip.startTime;
+      time = moment(time).format("DD/MM/YYYY [vào lúc] HH [giờ] mm [phút] ");
+      newData.infTrip.startTime = time;
+      res.status(200).render("users/detailTicket", { ticket: newData });
+    });
   }
 
   deleteTicket(req, res) {
     const { id } = req.params;
-    tickets
-      .destroy({
-        where: {
-          id,
-        },
-      })
-      .then(() => {
-        console.log("Xoa ve thanh cong");
-        res.status(200).redirect("back");
-      });
+    tickets.destroy({
+      where: {
+        id
+      }
+    }).then(() => {
+      console.log("Xoa ve thanh cong");
+      res.status(200).redirect("back");
+    });
   }
 }
 

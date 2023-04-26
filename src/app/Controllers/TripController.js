@@ -170,9 +170,9 @@ class TripController {
   async findTrip(req, res, next) {
     const { noiDi, noiDen } = req.body;
     const query = `
-      select id from trips
-      where fromStation in ( select id from stations where province like :noiDi)
-        and toStation in (select id from stations where province like :noiDen)
+      select id from Trips
+      where fromStation in ( select id from Stations where province like :noiDi)
+        and toStation in (select id from Stations where province like :noiDen)
     `;
     const [tripList] = await sequelize.query(query, {
       replacements: {

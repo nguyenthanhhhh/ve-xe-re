@@ -1,0 +1,24 @@
+<div class="mt4">
+    <div class="row">
+        {{#each trips}}
+        <div class="col-sm-6 col-lg-4">
+            <div class="card">
+                <img class="card-img-top" src="{{this.avatar}}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">{{this.from.province}} đi {{this.to.province}}</h5>
+                    <p class="card-text">Chuyến đi xuất phát từ {{this.from.name}} tới
+                        {{this.to.name}} </p>
+                    <p class="card-text">Chuyến đi được chở bởi {{this.infVehicle.name}} </p>
+                    <a class="btn btn-primary" href="/trips/getDetail/{{this.id}}/{{this.infVehicle.id}}">Xem chi
+                        tiết/Mua vé</a>
+                </div>
+            </div>
+        </div>
+        {{else}}
+
+        <p class="card-text mr-2">Không có chuyến đi nào. </p>
+        <a href="/trips/formFindTrip">Quay lại</a>
+
+        {{/each}}
+    </div>
+</div>

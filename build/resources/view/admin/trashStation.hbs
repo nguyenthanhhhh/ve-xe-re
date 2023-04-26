@@ -1,0 +1,132 @@
+<table class="table">
+    <h1>Thùng rác</h1>
+    <a href="/admin/station-store">Danh sách bến xe</a>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tên bến</th>
+            <th scope="col">Địa chỉ</th>
+            <th scope="col" colspan="2">Tỉnh</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each stationList}}
+        <tr>
+            <th scope="row">{{sum @index 1}}</th>
+            <td>{{this.name}}</td>
+            <td>{{this.address}}</td>
+            <td>{{this.province}}</td>
+            <td>
+                <a href="/admin/station-store" id="btn-restore" class="btn btn-primary" data-toggle="modal"
+                    data-id={{this.id}} data-target="#restore-modal">Khôi phục</a>
+                <a href="" class="btn btn-danger" data-id="{{this.id}}" data-toggle="modal"
+                    data-target="#delete-modal">Xóa vĩnh viễn</a>
+            </td>
+
+        </tr>
+        {{else}}
+        <tr>
+            <td colspan="5" class="text-center">
+                Thùng rác rỗng
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+{{!-- confirm restore --}}
+<div class="modal fade" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn muốn khôi phục bến xe này?
+            </div>
+            <div class="modal-footer">
+                <button id="btn-restore-station" class="btn btn-primary">Khôi phục</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{{! Confirm delete station }}
+
+<div class="modal fade" id="delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Bạn chắc chắn muốn xóa VĨNH VIỄN bến xe này?
+            </div>
+            <div class="modal-footer">
+                <button id="btn-delete-station" class="btn btn-danger">Xóa</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{!-- delete hidden form --}}
+<form name="delete-station-form" method="POST" action=""></form>
+<form name="restore-station-form" method="POST" action=""></form>
+
+<script>
+
+    //Thêm hàm này để sử dụng $
+    document.addEventListener("DOMContentLoaded", function () {
+        var stationId;
+        var btnDeleteStation = document.getElementById("btn-delete-station");
+        var deleteForm = document.forms['delete-station-form'];
+        var btnRestore = document.getElementById("btn-restore-station");
+        var restoreForm = document.forms['restore-station-form'];
+
+
+
+
+        $('#restore-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            stationId = button.data('id');
+        });
+
+        $('#delete-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            stationId = button.data('id');
+        });
+
+
+        //click vào nút xác nhận khôi phục
+        btnRestore.onclick = function () {
+            restoreForm.action = '/stations/' + stationId + '/restore?_method=PATCH';
+            restoreForm.submit();
+        }
+
+
+
+        // Click vào nút xác nhận xóa
+        btnDeleteStation.onclick = function () {
+            deleteForm.action = '/stations/' + stationId + '/destroy?_method=DELETE';
+            deleteForm.submit();
+            console.log("Xoa vinh vien thanh cong");
+        }
+    })
+
+
+</script>
