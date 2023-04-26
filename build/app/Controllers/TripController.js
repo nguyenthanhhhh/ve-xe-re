@@ -6,17 +6,21 @@ const { dataToObj } = require("../util/database");
 class TripController {
   getAll(req, res, next) {
     Trips.findAll({
-      include: [{
-        model: Station,
-        as: "from"
-      }, {
-        model: Station,
-        as: "to"
-      }, {
-        model: vehicle,
-        as: "infVehicle"
-      }]
-    }).then(trips => {
+      include: [
+        {
+          model: Station,
+          as: "from",
+        },
+        {
+          model: Station,
+          as: "to",
+        },
+        {
+          model: vehicle,
+          as: "infVehicle",
+        },
+      ],
+    }).then((trips) => {
       // console.log(dataToObj(trips));
       res.render("trips/getAll", { trips: JSON.parse(JSON.stringify(trips)) });
     });
@@ -33,34 +37,38 @@ class TripController {
     `;
     const tripDetail = await Trips.findOne({
       where: {
-        id
+        id,
       },
 
-      include: [{
-        model: Station,
-        as: "from"
-      }, {
-        model: Station,
-        as: "to"
-      }, {
-        model: vehicle,
-        as: "infVehicle",
-        where: {
-          id: vehicleID
-        }
-      }]
+      include: [
+        {
+          model: Station,
+          as: "from",
+        },
+        {
+          model: Station,
+          as: "to",
+        },
+        {
+          model: vehicle,
+          as: "infVehicle",
+          where: {
+            id: vehicleID,
+          },
+        },
+      ],
     });
 
     let [seatsAvailable] = await sequelize.query(query, {
-      replacements: { nameVehicle: tripDetail.infVehicle.name }
+      replacements: { nameVehicle: tripDetail.infVehicle.name },
     });
     let arrSeats = new Array();
 
-    seatsAvailable.forEach(val => arrSeats.push(val.name));
+    seatsAvailable.forEach((val) => arrSeats.push(val.name));
 
     res.render("trips/getDetail", {
       tripDetail: dataToObj(tripDetail),
-      seatsAvailable: dataToObj(arrSeats)
+      seatsAvailable: dataToObj(arrSeats),
     });
   }
 
@@ -74,20 +82,24 @@ class TripController {
     newTrip.slug = slug;
     console.log(newTrip);
 
-    Trips.create(newTrip).then(trip => {
-      res.status(201).redirect("/");
-    }).catch(err => {
-      res.status(400).send({ message: err.message });
-    });
+    Trips.create(newTrip)
+      .then((trip) => {
+        res.status(201).redirect("/");
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
   }
 
   updateGet(req, res, next) {
     const { id } = req.params;
-    Trips.findByPk(id).then(trip => {
-      res.render("trips/update", { trip: JSON.parse(JSON.stringify(trip)) });
-    }).catch(err => {
-      res.status(400).send({ message: err.message });
-    });
+    Trips.findByPk(id)
+      .then((trip) => {
+        res.render("trips/update", { trip: JSON.parse(JSON.stringify(trip)) });
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
   }
 
   updatePut(req, res, next) {
@@ -95,52 +107,60 @@ class TripController {
     const newTrip = req.body;
     Trips.update(newTrip, {
       where: {
-        id
-      }
-    }).then(() => {
-      console.log("Cap nhat thanh cong");
-      res.status(201).redirect("/admin/trips-store");
-    }).catch(err => {
-      res.status(400).send({ message: err.message });
-    });
+        id,
+      },
+    })
+      .then(() => {
+        console.log("Cap nhat thanh cong");
+        res.status(201).redirect("/admin/trips-store");
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
   }
 
   delete(req, res, next) {
     const { id } = req.params;
     Trips.destroy({
-      where: { id }
-    }).then(() => {
-      res.status(200).redirect("back");
-    }).catch(err => {
-      res.status(400).send({ message: err.message });
-    });
+      where: { id },
+    })
+      .then(() => {
+        res.status(200).redirect("back");
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
   }
 
   destroy(req, res, next) {
     const { id } = req.params;
     Trips.destroy({
       where: {
-        id
+        id,
       },
-      force: true
-    }).then(() => {
-      res.status(200).redirect("back");
-    }).catch(err => {
-      res.status(400).send({ message: err.message });
-    });
+      force: true,
+    })
+      .then(() => {
+        res.status(200).redirect("back");
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
   }
 
   restore(req, res, next) {
     const { id } = req.params;
     Trips.restore({
       where: {
-        id
-      }
-    }).then(() => {
-      res.status(200).redirect("back");
-    }).catch(err => {
-      res.status(400).send({ message: err.message });
-    });
+        id,
+      },
+    })
+      .then(() => {
+        res.status(200).redirect("back");
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
   }
 
   formFindTrip(req, res, next) {
@@ -149,42 +169,54 @@ class TripController {
 
   async findTrip(req, res, next) {
     const { noiDi, noiDen } = req.body;
+    let tripList;
     const query = `
       select id from Trips
       where fromStation in ( select id from Stations where province like :noiDi)
         and toStation in (select id from Stations where province like :noiDen)
     `;
-    const [tripList] = await sequelize.query(query, {
-      replacements: {
-        noiDi: noiDi,
-        noiDen: noiDen
-      }
-    });
+    try {
+      [tripList] = await sequelize.query(query, {
+        replacements: {
+          noiDi: noiDi,
+          noiDen: noiDen,
+        },
+      });
+    } catch (error) {
+      console.log("Coi loi");
+      console.log(error);
+    }
     let idList = new Array();
-    tripList.forEach(id => idList.push(id.id));
+    tripList.forEach((id) => idList.push(id.id));
     Trips.findAll({
       where: {
-        id: { [Op.in]: idList }
+        id: { [Op.in]: idList },
       },
-      include: [{
-        model: Station,
-        as: "from"
-      }, {
-        model: Station,
-        as: "to"
-      }, {
-        model: vehicle,
-        as: "infVehicle"
-      }]
-    }).then(trips => {
-      console.log(dataToObj(trips));
-      res.render("trips/getAll", {
-        trips: JSON.parse(JSON.stringify(trips))
+      include: [
+        {
+          model: Station,
+          as: "from",
+        },
+        {
+          model: Station,
+          as: "to",
+        },
+        {
+          model: vehicle,
+          as: "infVehicle",
+        },
+      ],
+    })
+      .then((trips) => {
+        console.log(dataToObj(trips));
+        res.render("trips/getAll", {
+          trips: JSON.parse(JSON.stringify(trips)),
+        });
+        // console.log(dataToObj(trips));
+      })
+      .catch((err) => {
+        res.send({ message: err.message });
       });
-      // console.log(dataToObj(trips));
-    }).catch(err => {
-      res.send({ message: err.message });
-    });
     // res.send("HELLo");
   }
 }

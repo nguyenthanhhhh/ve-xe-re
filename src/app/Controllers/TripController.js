@@ -169,17 +169,23 @@ class TripController {
 
   async findTrip(req, res, next) {
     const { noiDi, noiDen } = req.body;
+    let tripList;
     const query = `
       select id from Trips
       where fromStation in ( select id from Stations where province like :noiDi)
         and toStation in (select id from Stations where province like :noiDen)
     `;
-    const [tripList] = await sequelize.query(query, {
-      replacements: {
-        noiDi: noiDi,
-        noiDen: noiDen,
-      },
-    });
+    try {
+      [tripList] = await sequelize.query(query, {
+        replacements: {
+          noiDi: noiDi,
+          noiDen: noiDen,
+        },
+      });
+    } catch (error) {
+      console.log("Coi loi");
+      console.log(error);
+    }
     let idList = new Array();
     tripList.forEach((id) => idList.push(id.id));
     Trips.findAll({

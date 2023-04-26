@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         validate: {
           isUnique: function (value, next) {
-            Users.findOne({ where: { username: value } })
+            Users.findOne({ where: { userName: value } })
               .then(function (user) {
                 // Reject if a different user wants to use the same email
                 if (user) {
