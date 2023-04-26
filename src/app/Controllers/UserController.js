@@ -180,6 +180,9 @@ class UserController {
       })
       .then((tickets) => {
         res.render("users/ticket-store", { tickets: dataToObj(tickets) });
+      })
+      .catch((error) => {
+        res.status(500).send({ message: error.message });
       });
   }
 
@@ -221,20 +224,42 @@ class UserController {
         time = moment(time).format("DD/MM/YYYY [vào lúc] HH [giờ] mm [phút] ");
         newData.infTrip.startTime = time;
         res.status(200).render("users/detailTicket", { ticket: newData });
+      })
+      .catch((error) => {
+        res.status(500).send({ message: error.message });
       });
   }
 
-  deleteTicket(req, res) {
+  async deleteTicket(req, res) {
     const { id } = req.params;
+    const ticketDetail = await tickets.findOne({ where: { id } });
+    console.log("ticket detail: ---------------");
+    console.log(ticketDetail);
+    const { seat, vehicle_id } = ticketDetail;
+
     tickets
       .destroy({
         where: {
           id,
         },
       })
-      .then(() => {
+      .then(async () => {
+        const seatItem = await seats.findOne({
+          where: {
+            name: seat,
+            vehicle_id,
+          },
+        });
+
+        seatItem.status = 1;
+        await seatItem.save();
+        console.log("Seat item: ---------");
+        console.log(seatItem);
         console.log("Xoa ve thanh cong");
         res.status(200).redirect("back");
+      })
+      .catch((error) => {
+        res.status(500).send({ message: error.message });
       });
   }
 }
