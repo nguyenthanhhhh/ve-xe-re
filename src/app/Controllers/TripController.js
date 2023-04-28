@@ -171,9 +171,9 @@ class TripController {
     const { noiDi, noiDen } = req.body;
     let tripList;
     const query = `
-      select id from Trips
-      where fromStation in ( select id from Stations where province like :noiDi)
-        and toStation in (select id from Stations where province like :noiDen)
+      select id from "Trips"
+      where "fromStation" in ( select id from "Stations" where province like :noiDi)
+        and "toStation" in (select id from "Stations" where province like :noiDen)
     `;
     try {
       [tripList] = await sequelize.query(query, {
