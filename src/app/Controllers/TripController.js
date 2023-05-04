@@ -2,6 +2,7 @@ const { Trips, Station, vehicle, sequelize } = require("../models");
 const crypto = require("crypto");
 const { Op } = require("sequelize");
 const { dataToObj } = require("../util/database");
+const moment = require("moment");
 
 class TripController {
   getAll(req, res, next) {
@@ -34,6 +35,7 @@ class TripController {
 	                    select id from vehicles where id = :id
                     ) 
         ) as seat2 where status = 1
+        order by name ASC
     `;
     const tripDetail = await Trips.findOne({
       where: {
@@ -59,6 +61,13 @@ class TripController {
       ],
     });
 
+    //format time
+    let newData = dataToObj(tripDetail);
+    let time = newData.startTime;
+    time = moment(time).format("DD/MM/YYYY [lúc] HH [giờ] mm [phút] ");
+    newData.startTime = time;
+
+    //get seats available
     let [seatsAvailable] = await sequelize.query(query, {
       replacements: { id: tripDetail.infVehicle.id },
     });
@@ -67,7 +76,7 @@ class TripController {
     seatsAvailable.forEach((val) => arrSeats.push(val.name));
 
     res.render("trips/getDetail", {
-      tripDetail: dataToObj(tripDetail),
+      tripDetail: dataToObj(newData),
       seatsAvailable: dataToObj(arrSeats),
     });
   }

@@ -2,7 +2,6 @@ const { Users, tickets, seats, Trips, vehicle, Station } = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const moment = require("moment");
-const cloneDeep = require("lodash.clonedeep");
 const _ = require("lodash");
 const { dataToObj, dataToObj2 } = require("../util/database");
 
@@ -33,17 +32,6 @@ class UserController {
       console.log(err);
       res.status(400).send(err + " <a href=/>Quay lại </a>");
     }
-    // const salt = bcrypt.genSaltSync(10);
-    // const hash = bcrypt.hashSync(password, salt);
-
-    // Users.create({ userName, password: hash, email })
-    //   .then((user) => {
-    //     console.log(user);
-    //     res.status(201).redirect("/");
-    //   })
-    //   .catch((err) => {
-    //     res.status(400).send({ message: err.message });
-    //   });
   }
 
   loginGet(req, res) {
@@ -225,7 +213,7 @@ class UserController {
       .then((ticket) => {
         let newData = dataToObj(ticket);
         let time = newData.infTrip.startTime;
-        time = moment(time).format("DD/MM/YYYY [vào lúc] HH [giờ] mm [phút] ");
+        time = moment(time).format("DD/MM/YYYY [lúc] HH [giờ] mm [phút] ");
         newData.infTrip.startTime = time;
         res.status(200).render("users/detailTicket", { ticket: newData });
       })
