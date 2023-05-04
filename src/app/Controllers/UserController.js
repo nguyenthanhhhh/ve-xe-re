@@ -126,6 +126,8 @@ class UserController {
         vehicle_id,
         seat: chooseSeat,
       });
+      console.log("New ticket: ");
+      console.log(newTicket);
 
       const newSeat = await seats.findOne({
         where: {
@@ -140,7 +142,9 @@ class UserController {
 
       res.status(201).send("Mua vé thành công. <a href = />Quay lại </a>");
     } catch (error) {
-      res.status(500).send({ message: error.message });
+      res.status(500).send({
+        message: "[UserController] [BuyTicket] error: " + error.message,
+      });
     }
   }
 

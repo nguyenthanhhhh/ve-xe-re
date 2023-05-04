@@ -31,7 +31,7 @@ class TripController {
     const query = `
       select name from (
         select * from seats where vehicle_id in (
-	                    select id from vehicles where name like :nameVehicle
+	                    select id from vehicles where id = :id
                     ) 
         ) as seat2 where status = 1
     `;
@@ -60,7 +60,7 @@ class TripController {
     });
 
     let [seatsAvailable] = await sequelize.query(query, {
-      replacements: { nameVehicle: tripDetail.infVehicle.name },
+      replacements: { id: tripDetail.infVehicle.id },
     });
     let arrSeats = new Array();
 
