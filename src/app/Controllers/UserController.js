@@ -55,8 +55,6 @@ class UserController {
       });
 
       const timeExpire = process.env.JWT_EXPIRES_IN;
-      console.log("TIME EXPIRED: " + timeExpire);
-
       if (userLog) {
         const auth = bcrypt.compareSync(password, userLog.password);
         if (auth) {
@@ -68,7 +66,6 @@ class UserController {
 
           res.cookie("auth", token);
           res.redirect("/");
-          console.log("Dang nhap thanh cong");
         } else {
           res
             .status(401)
@@ -91,7 +88,6 @@ class UserController {
     // req.logOut();
     res.status(200).clearCookie("auth");
     res.redirect("/");
-    console.log("Logout");
   }
 
   async buyTicket(req, res) {
@@ -114,8 +110,6 @@ class UserController {
         vehicle_id,
         seat: chooseSeat,
       });
-      console.log("New ticket: ");
-      console.log(newTicket);
 
       const newSeat = await seats.findOne({
         where: {
@@ -225,8 +219,6 @@ class UserController {
   async deleteTicket(req, res) {
     const { id } = req.params;
     const ticketDetail = await tickets.findOne({ where: { id } });
-    console.log("ticket detail: ---------------");
-    console.log(ticketDetail);
     const { seat, vehicle_id } = ticketDetail;
 
     tickets
@@ -245,9 +237,6 @@ class UserController {
 
         seatItem.status = 1;
         await seatItem.save();
-        console.log("Seat item: ---------");
-        console.log(seatItem);
-        console.log("Xoa ve thanh cong");
         res.status(200).redirect("back");
       })
       .catch((error) => {

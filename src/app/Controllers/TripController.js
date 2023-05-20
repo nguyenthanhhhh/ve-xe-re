@@ -89,7 +89,6 @@ class TripController {
     const newTrip = req.body;
     const slug = crypto.randomBytes(10).toString("hex");
     newTrip.slug = slug;
-    console.log(newTrip);
 
     Trips.create(newTrip)
       .then((trip) => {
@@ -217,7 +216,6 @@ class TripController {
       ],
     })
       .then((trips) => {
-        console.log(dataToObj(trips));
         res.render("trips/getAll", {
           trips: JSON.parse(JSON.stringify(trips)),
         });
